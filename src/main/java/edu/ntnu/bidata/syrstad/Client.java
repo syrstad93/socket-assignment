@@ -14,7 +14,13 @@ public class Client {
   private int retries = 0;
   private final String address;
   private final int port;
-  
+
+  public Client() throws InterruptedException {
+    address = "127.0.0.1";
+    this.port = 1238;
+    connect(this.port, this.address);
+  }
+
   public Client(int port) throws InterruptedException {
     address = "127.0.0.1";
     this.port = port;

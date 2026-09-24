@@ -9,6 +9,16 @@ public class Server {
   private ServerSocket serverSocket;
   private static SmartTv smartTv;
 
+  public Server() throws IOException {
+    serverSocket = new ServerSocket(1238);
+    System.out.println("Server started on port " + "1238");
+
+    while (true) {
+      Socket clientSocket = serverSocket.accept();
+      new Thread(() -> handleClient(clientSocket)).start();
+    }
+  }
+
   public Server(int port) throws IOException {
     serverSocket = new ServerSocket(port);
     System.out.println("Server started on port " + port);

@@ -10,7 +10,7 @@ public class UserInterface {
   private UserInterface() throws InterruptedException {}
 
   private static int mainQuery() {
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 30; i++) {
       System.out.println(" ");
     }
     System.out.println("Welcome to SmartTv Remote Control");
