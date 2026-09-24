@@ -47,7 +47,8 @@ public class Server {
               case SET_VOLUME -> smartTv.setVolume(Integer.parseInt(parts[1]));
               case CHANNEL_UP -> smartTv.channelUp();
               case CHANNEL_DOWN -> smartTv.channelDown();
-              case QUIT -> System.exit(0);
+              case STATUS -> smartTv.update();
+              default -> smartTv.update();
             }
           }
         }
@@ -55,12 +56,16 @@ public class Server {
         throw new RuntimeException(e);
       }
     } catch (IOException | RuntimeException e) {
-      System.out.println(e.getMessage());
+      throw new RuntimeException(e);
     }
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     smartTv = new SmartTv();
-    new Server(65534);
+    try {
+      new Server(65534);
+    } catch (IOException e) {
+      System.out.println("Error: " + e.getMessage());
+    }
   }
 }

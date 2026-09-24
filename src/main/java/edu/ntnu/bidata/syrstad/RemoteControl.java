@@ -6,8 +6,8 @@ public class RemoteControl {
   private final Client socket;
   private boolean connected;
 
-  public RemoteControl() throws InterruptedException {
-    socket = new Client(65534);
+  public RemoteControl(int port) throws InterruptedException {
+    socket = new Client(port);
     connected = socket.isConnected();
   }
 

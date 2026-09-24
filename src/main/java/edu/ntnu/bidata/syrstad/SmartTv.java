@@ -77,7 +77,11 @@ public class SmartTv {
   }
 
   public void update() {
-    System.out.println(
-        "SmartTv is " + (isOn ? "on" : "off") + ", channel: " + channel + ", volume: " + volume);
-  }
+    if (isOn) {
+      System.out.println(
+          "SmartTv is " + "on" + ", channel: " + channel + ", volume: " + volume);
+      }  else {
+      System.out.println("SmartTv is off");
+      }
+    }
 }
