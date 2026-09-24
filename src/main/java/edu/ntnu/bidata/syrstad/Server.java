@@ -9,6 +9,12 @@ public class Server {
   private ServerSocket serverSocket;
   private static SmartTv smartTv;
 
+  /**
+   * Creates a server listening on port '1238'
+   * Always accepts new clients
+   *
+   * @throws IOException
+   */
   public Server() throws IOException {
     serverSocket = new ServerSocket(1238);
     System.out.println("Server started on port " + "1238");
@@ -19,6 +25,13 @@ public class Server {
     }
   }
 
+  /**
+   * Creates a server listening on the specified port.
+   * Always accepts new clients
+   *
+   * @param port
+   * @throws IOException
+   */
   public Server(int port) throws IOException {
     serverSocket = new ServerSocket(port);
     System.out.println("Server started on port " + port);
@@ -69,6 +82,7 @@ public class Server {
       throw new RuntimeException(e);
     }
   }
+
 
   public static void main(String[] args) {
     smartTv = new SmartTv();

@@ -15,18 +15,38 @@ public class Client {
   private final String address;
   private final int port;
 
+  /**
+   * Creates an client instance
+   * Connects to a server on port '1238'
+   *
+   * @throws InterruptedException
+   */
   public Client() throws InterruptedException {
     address = "127.0.0.1";
     this.port = 1238;
     connect(this.port, this.address);
   }
 
+  /**
+   * Creates an client instance.
+   * Connects to a server on a specified port.
+   *
+   * @param port to connect to.
+   * @throws InterruptedException
+   */
   public Client(int port) throws InterruptedException {
     address = "127.0.0.1";
     this.port = port;
     connect(this.port, this.address);
   }
 
+  /**
+   * Connects to a server on a specified port and address.
+   *
+   * @param port to connect to.
+   * @param address to connect to.
+   * @throws InterruptedException
+   */
   private void connect(int port, String address) throws InterruptedException {
     try {
       socket = new Socket(address, port);
@@ -40,6 +60,13 @@ public class Client {
     }
   }
 
+  /**
+   * Retries connection if it fails on initial connection.
+   *
+   * @param port to connect to.
+   * @param address to connect to.
+   * @throws InterruptedException
+   */
   private void retryConnection(int port, String address) throws InterruptedException {
     if (retries++ < 3) {
       System.out.println("Retrying connection...");
@@ -48,6 +75,13 @@ public class Client {
     }
   }
 
+  /**
+   * Sends a message to the server.
+   *
+   * @param message to send.
+   * @throws IOException
+   * @throws InterruptedException
+   */
   public void message(String message) throws IOException, InterruptedException {
     try {
       outputStream.writeUTF(message);
@@ -58,15 +92,23 @@ public class Client {
     }
   }
 
+  /**
+   * Closes the connection.
+   */
   public void close() {
     try {
       socket.close();
       outputStream.close();
+      connected = false;
     } catch (IOException io) {
       System.out.println(io.getMessage());
     }
   }
 
+  /**
+   *
+   * @return
+   */
   public boolean isConnected() {
     return connected;
   }
