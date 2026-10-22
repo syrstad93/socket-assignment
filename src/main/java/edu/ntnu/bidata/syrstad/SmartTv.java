@@ -18,7 +18,7 @@ public class SmartTv {
     if (isOn) {
       if (1 <= c && c <= 3) {
         this.channel = c;
-        update();
+        System.out.println(update());
       } else {
         System.out.println("Channel must be between 1 and 3");
       }
@@ -34,7 +34,7 @@ public class SmartTv {
       } else {
         this.channel += 1;
       }
-      update();
+      System.out.println(update());
     } else {
       System.out.println("Tv is off");
     }
@@ -47,7 +47,7 @@ public class SmartTv {
       } else {
         this.channel -= 1;
       }
-      update();
+      System.out.println(update());
     } else {
       System.out.println("Tv is off");
     }
@@ -57,7 +57,7 @@ public class SmartTv {
     if (isOn) {
       if (1 <= v && v <= 100) {
         this.volume = v;
-        update();
+        System.out.println(update());
       } else {
         System.out.println("Volume must be between 1 and 100");
       }
@@ -68,20 +68,19 @@ public class SmartTv {
 
   public void toggleOn() {
     if (isOn) {
-      isOn = false;
       setChannel(1);
+      isOn = false;
     } else {
       isOn = true;
     }
-    update();
+    System.out.println(update());
   }
 
-  public void update() {
+  public String update() {
     if (isOn) {
-      System.out.println(
-          "SmartTv is " + "on" + ", channel: " + channel + ", volume: " + volume);
+      return "SmartTv is " + "on" + ", channel: " + channel + ", volume: " + volume;
       }  else {
-      System.out.println("SmartTv is off");
+      return "SmartTv is off";
       }
     }
 }
