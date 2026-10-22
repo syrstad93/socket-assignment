@@ -1,5 +1,6 @@
 package edu.ntnu.bidata.syrstad;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -10,6 +11,7 @@ import java.net.Socket;
 public class Client {
   private Socket socket;
   private DataOutputStream outputStream;
+  private DataInputStream inputStream;
   private Boolean connected = false;
   private int retries = 0;
   private final String address;
@@ -52,8 +54,10 @@ public class Client {
       socket = new Socket(address, port);
       System.out.println("Connected to server at " + address + ":" + port);
       outputStream = new DataOutputStream(socket.getOutputStream());
+      inputStream = new DataInputStream(socket.getInputStream());
       connected = true;
       retries = 0;
+      receive();
     } catch (IOException io) {
       System.out.println(io.getMessage());
       retryConnection(port, address);
@@ -92,14 +96,29 @@ public class Client {
     }
   }
 
+  private void receive() {
+    Thread listener = new Thread(() -> {
+      try {
+        while (connected) {
+          System.out.println("[Server] " + inputStream.readUTF());
+        }
+      } catch (IOException e) {
+        if (connected) {
+          System.out.println("Connection lost: " + e.getMessage());
+        }
+      }
+    });
+    listener.setDaemon(true);
+    listener.start();
+  }
+
   /**
    * Closes the connection.
    */
   public void close() {
+    connected = false;
     try {
       socket.close();
-      outputStream.close();
-      connected = false;
     } catch (IOException io) {
       System.out.println(io.getMessage());
     }
