@@ -1,13 +1,17 @@
 package edu.ntnu.bidata.syrstad;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Server {
   private ServerSocket serverSocket;
   private static SmartTv smartTv;
+  private DataOutputStream dataOutputStream;
+  private ArrayList<DataOutputStream> clients = new ArrayList<>();
 
   /**
    * Creates a server listening on port '1238'
@@ -39,6 +43,7 @@ public class Server {
     while (true) {
       Socket clientSocket = serverSocket.accept();
       new Thread(() -> handleClient(clientSocket)).start();
+      clients.add(new DataOutputStream(clientSocket.getOutputStream()));
     }
   }
 
@@ -65,13 +70,32 @@ public class Server {
           }
           if (command != null) {
             switch (command) {
-              case POWER -> smartTv.toggleOn();
-              case SET_CHANNEL -> smartTv.setChannel(Integer.parseInt(parts[1]));
-              case SET_VOLUME -> smartTv.setVolume(Integer.parseInt(parts[1]));
-              case CHANNEL_UP -> smartTv.channelUp();
-              case CHANNEL_DOWN -> smartTv.channelDown();
-              case STATUS -> smartTv.update();
-              default -> smartTv.update();
+              case POWER:
+                smartTv.toggleOn();
+                message(smartTv.update());
+                break;
+              case SET_CHANNEL:
+                smartTv.setChannel(Integer.parseInt(parts[1]));
+                message(smartTv.update());
+                break;
+              case SET_VOLUME:
+                smartTv.setVolume(Integer.parseInt(parts[1]));
+                message(smartTv.update());
+                break;
+              case CHANNEL_UP:
+                smartTv.channelUp();
+                message(smartTv.update());
+                break;
+              case CHANNEL_DOWN:
+                smartTv.channelDown();
+                message(smartTv.update());
+                break;
+              case STATUS:
+                message(smartTv.update());
+                break;
+              default:
+                message(smartTv.update());
+                break;
             }
           }
         }
@@ -83,7 +107,28 @@ public class Server {
     }
   }
 
+  /**
+   * Sends a message to the client
+   *
+   * @param message
+   */
+  public void message(String message) {
+    for (DataOutputStream out : clients) {
+      try {
+        out.writeUTF(message);
+        out.flush();
+      } catch (IOException e) {
+        clients.remove(out);
+      }
+    }
+  }
 
+
+  /**
+   * Starts the server
+   *
+   * @param args
+   */
   public static void main(String[] args) {
     smartTv = new SmartTv();
     try {
